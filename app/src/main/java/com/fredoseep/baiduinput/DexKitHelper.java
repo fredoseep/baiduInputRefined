@@ -30,11 +30,7 @@ public class DexKitHelper {
 
     public String adFingerprintCollectionMethodName = "a";
 
-    public String startAutoSyncMethodName = "e";
 
-    public String startSyncWithSuccessPrefMethodName = "f";
-
-    public String startUploadOnlyAutoSyncMethodName = "g";
 
 
 
@@ -60,10 +56,7 @@ public class DexKitHelper {
                     onGettingNewClipboardContentMethodName = cacheProps.getProperty("onGettingNewClipboardContentMethodName", onGettingNewClipboardContentMethodName);
                     setClipboardMethodName = cacheProps.getProperty("setClipboardMethodName", setClipboardMethodName);
                     uploadPrivacyRecordMethodName = cacheProps.getProperty("uploadPrivacyRecordMethodName", uploadPrivacyRecordMethodName);
-                    startAutoSyncMethodName = cacheProps.getProperty("startAutoSyncMethodName", startAutoSyncMethodName);
                     adFingerprintCollectionMethodName = cacheProps.getProperty("adFingerprintCollectionMethodName", adFingerprintCollectionMethodName);
-                    startSyncWithSuccessPrefMethodName = cacheProps.getProperty("startSyncWithSuccessPrefMethodName", startSyncWithSuccessPrefMethodName);
-                    startUploadOnlyAutoSyncMethodName = cacheProps.getProperty("startUploadOnlyAutoSyncMethodName", startUploadOnlyAutoSyncMethodName);
                     needScan = false;
                 }
             } catch (Exception e) {
@@ -131,49 +124,14 @@ public class DexKitHelper {
                 );
                 adFingerprintCollectionMethodName = adFingerprintCollectionMethodDataList.get(0).getMethodName();
 
-                List<ClassData> ClipboardSyncHelperClassDataList = bridge.findClass(
-                        FindClass.create().matcher(ClassMatcher.create().className("com.baidu.input.sync.clipboard.ClipboardSyncHelper"))
-                );
 
-                List<MethodData> startAutoSyncMethodDataList = bridge.findMethod(
-                        FindMethod.create().searchInClass(ClipboardSyncHelperClassDataList).matcher(
-                                MethodMatcher.create()
-                                        .returnType("io.reactivex.Completable")
-                                        .paramTypes()
-                        )
-                );
-
-                startAutoSyncMethodName = startAutoSyncMethodDataList.get(0).getMethodName();
-
-                List<MethodData> startSyncWithSuccessPrefMethodDataList = bridge.findMethod(
-                        FindMethod.create().searchInClass(ClipboardSyncHelperClassDataList).matcher(
-                                MethodMatcher.create()
-                                        .returnType("io.reactivex.internal.operators.completable.CompletableObserveOn")
-                                        .paramTypes()
-                        )
-                );
-                startSyncWithSuccessPrefMethodName = startSyncWithSuccessPrefMethodDataList.get(0).getMethodName();
-
-                List<MethodData> startUploadOnlyAutoSyncMethodDataList = bridge.findMethod(
-                        FindMethod.create().searchInClass(ClipboardSyncHelperClassDataList).matcher(
-                                MethodMatcher.create()
-                                        .returnType("void")
-                                        .paramTypes()
-                        )
-                ).stream().filter(methodData -> {
-                    return !methodData.getMethodName().contains("<");
-                }).collect(Collectors.toList());
-
-                startUploadOnlyAutoSyncMethodName = startUploadOnlyAutoSyncMethodDataList.get(0).getMethodName();
 
                 cacheProps.setProperty("apk_last_modified", String.valueOf(currentApkTime));
                 cacheProps.setProperty("onGettingNewClipboardContentMethodName", onGettingNewClipboardContentMethodName);
                 cacheProps.setProperty("setClipboardMethodName", setClipboardMethodName);
                 cacheProps.setProperty("uploadPrivacyRecordMethodName", uploadPrivacyRecordMethodName);
                 cacheProps.setProperty("adFingerprintCollectionMethodName", adFingerprintCollectionMethodName);
-                cacheProps.setProperty("startAutoSyncMethodName", startAutoSyncMethodName);
-                cacheProps.setProperty("startSyncWithSuccessPrefMethodName", startSyncWithSuccessPrefMethodName);
-                cacheProps.setProperty("startUploadOnlyAutoSyncMethodName", startUploadOnlyAutoSyncMethodName);
+
 
 
 

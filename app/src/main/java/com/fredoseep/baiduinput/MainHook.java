@@ -179,39 +179,7 @@ public class MainHook implements IXposedHookLoadPackage {
             log(t.toString());
         }
 
-//        try {
-//            XC_MethodReplacement disconnectReplacer = new XC_MethodReplacement() {
-//                @Override
-//                protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-//                    log("【隐私保护】已拔掉剪贴板云同步网线，安全拦截: " + param.method.getName());
-//                    return null;
-//                }
-//            };
-//
-//            XposedHelpers.findAndHookMethod(
-//                    "com.baidu.input.sync.clipboard.ClipboardSyncHelper",
-//                    realClassLoader,
-//                    helper.startAutoSyncMethodName,
-//                    disconnectReplacer
-//            );
-//
-//            XposedHelpers.findAndHookMethod(
-//                    "com.baidu.input.sync.clipboard.ClipboardSyncHelper",
-//                    realClassLoader,
-//                    helper.startSyncWithSuccessPrefMethodName,
-//                    disconnectReplacer
-//            );
-//
-//            XposedHelpers.findAndHookMethod(
-//                    "com.baidu.input.sync.clipboard.ClipboardSyncHelper",
-//                    realClassLoader,
-//                    helper.startUploadOnlyAutoSyncMethodName,
-//                    disconnectReplacer
-//            );
-//
-//        } catch (Exception ex) {
-//            log("Hook 云同步拦截异常: " + ex.toString());
-//        }
+
         try {
             Class<?> completableEmptyClass = XposedHelpers.findClass("io.reactivex.internal.operators.completable.CompletableEmpty", realClassLoader);
             final Object emptyCompletable = XposedHelpers.getStaticObjectField(completableEmptyClass, completableEmptyClass.getFields()[0].getName());
@@ -225,17 +193,13 @@ public class MainHook implements IXposedHookLoadPackage {
                 }
             };
 
-            // 3. 深入敌后，直接把 e, f, g 内部真正发起网络请求的三个闭包任务全部替换掉
-
-            // 对应 e() 内部的 $startAutoSync$1
             XposedHelpers.findAndHookMethod(
                     "com.baidu.input.sync.clipboard.ClipboardSyncHelper$startAutoSync$1",
                     realClassLoader,
-                    "invoke", // Function0 的执行方法
+                    "invoke",
                     lambdaReplacer
             );
 
-            // 对应 f() 内部的 $startSyncWithSuccessPref$1[cite: 1]
             XposedHelpers.findAndHookMethod(
                     "com.baidu.input.sync.clipboard.ClipboardSyncHelper$startSyncWithSuccessPref$1",
                     realClassLoader,
@@ -243,7 +207,6 @@ public class MainHook implements IXposedHookLoadPackage {
                     lambdaReplacer
             );
 
-            // 对应 g() 内部的 $startUploadOnlyAutoSync$1[cite: 1]
             XposedHelpers.findAndHookMethod(
                     "com.baidu.input.sync.clipboard.ClipboardSyncHelper$startUploadOnlyAutoSync$1",
                     realClassLoader,
